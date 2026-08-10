@@ -284,6 +284,7 @@ internal static class HelperGenericAppStartup
                 { "UserSettingUseImperial", "ckb_UseImperialNotMetric" },
                 { "UserSettingShowThumbnails", "ckb_ShowThumbnails" },
                 { "UserSettingRetainMapZoom", "ckb_RetainMapZoom" },
+                { "UserSettingDoNotDownloadAltitude", "ckb_DoNotDownloadAltitude" }
             },
             [key: "tpg_ImportExport_Import"] = new Dictionary<string, string>
             {

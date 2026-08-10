@@ -48,7 +48,8 @@ internal static class HelperLocalisationResourceManager
         }
 
         if (resourceKey.Contains(value: "Altitude") &&
-            !string.IsNullOrEmpty(value: resourceValue))
+            !string.IsNullOrEmpty(value: resourceValue) &&
+            resourceKey != "ckb_DoNotDownloadAltitude")
         {
             resourceValue = $"{resourceValue} [{HelperVariables.UOMAbbreviated}]";
             return resourceValue;
@@ -104,7 +105,8 @@ internal static class HelperLocalisationResourceManager
         }
 
         if (resourceKey.Contains(value: "Altitude") &&
-            !string.IsNullOrEmpty(value: resourceValue))
+            !string.IsNullOrEmpty(value: resourceValue) &&
+            resourceKey != "ckb_DoNotDownloadAltitude")
         {
             resourceValue = $"{resourceValue} [{HelperVariables.UOMAbbreviated}]";
             return resourceValue;

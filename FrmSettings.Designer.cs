@@ -105,6 +105,7 @@ namespace GeoTagNinja
             this.btn_ExportSettings = new System.Windows.Forms.Button();
             this.btn_ImportSettings = new System.Windows.Forms.Button();
             this.ttp_ShowThumbnails = new System.Windows.Forms.ToolTip(this.components);
+            this.ckb_DoNotDownloadAltitude = new System.Windows.Forms.CheckBox();
             this.tcr_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             this.gbx_AppSettings.SuspendLayout();
@@ -146,6 +147,7 @@ namespace GeoTagNinja
             // 
             // gbx_AppSettings
             // 
+            this.gbx_AppSettings.Controls.Add(this.ckb_DoNotDownloadAltitude);
             this.gbx_AppSettings.Controls.Add(this.ckb_AlwaysRecenterMap);
             this.gbx_AppSettings.Controls.Add(this.ckb_RetainMapZoom);
             this.gbx_AppSettings.Controls.Add(this.gbx_Startup_Folder);
@@ -712,6 +714,13 @@ namespace GeoTagNinja
             // 
             this.ttp_ShowThumbnails.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
+            // ckb_DoNotDownloadAltitude
+            // 
+            resources.ApplyResources(this.ckb_DoNotDownloadAltitude, "ckb_DoNotDownloadAltitude");
+            this.ckb_DoNotDownloadAltitude.Name = "ckb_DoNotDownloadAltitude";
+            this.ckb_DoNotDownloadAltitude.UseVisualStyleBackColor = true;
+            this.ckb_DoNotDownloadAltitude.CheckedChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            // 
             // FrmSettings
             // 
             this.AcceptButton = this.btn_Generic_OK;
@@ -831,5 +840,6 @@ namespace GeoTagNinja
         private System.Windows.Forms.RadioButton rbt_SetStartup_Folder;
         private System.Windows.Forms.CheckBox ckb_RetainMapZoom;
         private System.Windows.Forms.CheckBox ckb_AlwaysRecenterMap;
+        private System.Windows.Forms.CheckBox ckb_DoNotDownloadAltitude;
     }
 }

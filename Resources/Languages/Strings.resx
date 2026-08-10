@@ -1551,4 +1551,8 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>Always Re-centre map?</value>
     <comment>This is on by default. It affects whether the map should be recentered each time the user clicks on an item or we should instead check if an existing item is already on the map. The downside of the latter is that we don't re-zoom, so it's not a perfect solution.</comment>
   </data>
+  <data name="ckb_DoNotDownloadAltitude" xml:space="preserve">
+    <value>Do Not Download Altitude Values from API</value>
+    <comment>This is ref ticket #220, user requested an option to opt out of cloud-download of altitude values</comment>
+  </data>
 </root>

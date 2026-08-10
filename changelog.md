@@ -2,7 +2,7 @@
 
 **Build 9xxx [20260xxx]** (upcoming release)
 - NEW & UPDATED:
-	- TBA
+	- Added option ref #220 to disable downloading of Altitude data from the API. The default is to download Altitude data.
 - BUGS & FIXES:
 	- Fix #215 GPSDOP/GPSHPositioningError not being processed
 

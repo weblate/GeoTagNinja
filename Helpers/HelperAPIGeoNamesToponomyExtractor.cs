@@ -88,6 +88,16 @@ internal static class HelperAPIGeoNamesToponomyExtractor
                 buttons: MessageBoxButtons.OK);
         }
 
+        // If we have any data we make some changes (to altitude).
+        if (returnVal.Geonames != null && HelperVariables.UserSettingDoNotDownloadAltitude)
+        {
+            foreach (Geoname geoname in returnVal.Geonames)
+            {
+                // If the user has chosen to not download altitude, set it to a value that's out of bounds and is thus ignored later.
+                geoname.Srtm3 = -99999;
+            }
+        }
+
         return returnVal;
     }
 }
