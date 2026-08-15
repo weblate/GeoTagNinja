@@ -335,10 +335,15 @@ public class DirectoryElementCollection : List<DirectoryElement>
                         // STREAM TO UI:
                         onElementFound?.Invoke(de);
                     }
-                    else if (directoryInfo.Attributes.ToString()
-                                          .Contains(value: "Directory") &&
-                             !directoryInfo.Attributes.ToString()
-                                           .Contains(value: "ReparsePoint"))
+                    // So apparently this cannot be just directoryInfo.Attributes.ToString() because with that, .NET attempts to stringify a bitmask bitwise.
+                    // For stuff like OneDrive or similar apps this causes problems. If the bitmask contains non-standard flag bits, .ToString() falls back to displaying the raw integer string (in this case, 524304).
+                    // Which means 524304 in binary represents the combination of multiple low-level attribute flags:
+                    // - Directory(16 or 0x10)
+                    // - ReparsePoint(1024 or 0x400 — used by OneDrive cloud link placeholders)
+                    // - Pinned(524288 or 0x80000 — set when "Always keep on this device" is selected)
+                    // - 16 + 1024 + 524288 = 524304
+
+                    else if (directoryInfo.Attributes.HasFlag(FileAttributes.Directory))
                     {
                         Log.Trace(message: $"Folder: {directoryInfo.Name}");
                         DirectoryElement de = new(

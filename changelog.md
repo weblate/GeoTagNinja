@@ -4,7 +4,8 @@
 - NEW & UPDATED:
 	- Added option ref #220 to disable downloading of Altitude data from the API. The default is to download Altitude data.
 - BUGS & FIXES:
-	- Fix #215 GPSDOP/GPSHPositioningError not being processed
+	- Fix #215 GPSDOP/GPSHPositioningError not being processed.
+	- Fix #221 OneDrive/Google Drive folders and files not being properly processed.
 
 **Build 9654 [20260607]**
 - NEW & UPDATED:
