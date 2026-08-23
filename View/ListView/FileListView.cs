@@ -1718,9 +1718,10 @@ public partial class FileListView : System.Windows.Forms.ListView
         // WM_CONTEXTMENU
         if (m.Msg == 0x007B)
         {
-            // Get screen coordinates from LParam
-            int x = BitConverter.ToInt16(new byte[] { (byte)((int)m.LParam & 0xFF), (byte)(((int)m.LParam >> 8) & 0xFF) }, 0);
-            int y = BitConverter.ToInt16(new byte[] { (byte)(((int)m.LParam >> 16) & 0xFF), (byte)(((int)m.LParam >> 24) & 0xFF) }, 0);
+            // Safely extract coordinates as signed 16-bit integers (shorts) 
+            // to properly support negative values on secondary monitors.
+            short x = (short)((int)m.LParam & 0xFFFF);
+            short y = (short)(((int)m.LParam >> 16) & 0xFFFF);
 
             Point clientPoint = PointToClient(new Point(x, y));
 
@@ -1728,6 +1729,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             ShowFilterMenu(clientPoint);
             return;
         }
+
         base.WndProc(ref m);
     }
 
