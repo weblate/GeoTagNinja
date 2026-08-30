@@ -1,4 +1,8 @@
 ﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.Data;
+using GeoTagNinja.Helpers.Generic;
+using GeoTagNinja.Helpers.Localisation;
+using GeoTagNinja.Helpers.NonStatic;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
 using System;
@@ -82,7 +86,7 @@ public partial class FrmSettings : Form
     /// during form initialization to ensure controls are properly configured for user interaction.</remarks>
     private void AssignControlLabelsAndValues()
     {
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         ReturnControlText(
             control: this, senderForm: this);
 
@@ -109,7 +113,7 @@ public partial class FrmSettings : Form
                 {
                     ComboBox cbx = (ComboBox)control;
                     List<string> languageList = control == cbx_Language
-                        ? HelperLocalisationLanguageManager.GetTranslatedLanguages()
+                        ? LanguageManager.GetTranslatedLanguages()
                         : FrmMainApp.DTLanguageMapping.AsEnumerable()
                                                  .Select(selector: r => r.Field<string>(columnName: "languageCode"))
                                                  .ToList();
@@ -124,11 +128,11 @@ public partial class FrmSettings : Form
                         dr[columnName: "id"] = alreadyTranslatedLanguage; // "en"
 
                         native =
-                            HelperDataOtherDataRelated.DataGetFirstOrDefaultFromDataTable(
+                            OtherDataRelated.DataGetFirstOrDefaultFromDataTable(
                                 dataTableIn: FrmMainApp.DTLanguageMapping,
                                 dataColumnFilter: "languageCode", dataColumnReturn: "languageNative",
                                 keyEqualsWhat: alreadyTranslatedLanguage);
-                        english = HelperDataOtherDataRelated.DataGetFirstOrDefaultFromDataTable(
+                        english = OtherDataRelated.DataGetFirstOrDefaultFromDataTable(
                             dataTableIn: FrmMainApp.DTLanguageMapping,
                             dataColumnFilter: "languageCode", dataColumnReturn: "languageEnglish",
                             keyEqualsWhat: alreadyTranslatedLanguage);
@@ -145,18 +149,18 @@ public partial class FrmSettings : Form
                     // legacy code was that this would be something like "English" or "French" but i want it to be the character mapping
 
                     _languageSavedInSQL =
-                        (HelperDataApplicationSettings.DataReadSQLiteSettings(
+                        (ApplicationSettings.DataReadSQLiteSettings(
                             dataTable: HelperVariables.DtHelperDataApplicationSettings,
                             settingTabPage: parentNameToUse,
                             settingId: cbx.Name
                         ) ?? HelperVariables.DefaultEnglishString).ToLower().Substring(startIndex: 0, length: 2);
 
                     native =
-                        HelperDataOtherDataRelated.DataGetFirstOrDefaultFromDataTable(
+                        OtherDataRelated.DataGetFirstOrDefaultFromDataTable(
                             dataTableIn: FrmMainApp.DTLanguageMapping,
                             dataColumnFilter: "languageCode", dataColumnReturn: "languageNative",
                             keyEqualsWhat: _languageSavedInSQL);
-                    english = HelperDataOtherDataRelated.DataGetFirstOrDefaultFromDataTable(
+                    english = OtherDataRelated.DataGetFirstOrDefaultFromDataTable(
                         dataTableIn: FrmMainApp.DTLanguageMapping,
                         dataColumnFilter: "languageCode", dataColumnReturn: "languageEnglish",
                         keyEqualsWhat: _languageSavedInSQL);
@@ -249,7 +253,7 @@ public partial class FrmSettings : Form
         }
 
         // get values by name
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
         if (controls != null)
         {
@@ -262,7 +266,7 @@ public partial class FrmSettings : Form
                     {
                         try
                         {
-                            tbx.Text = HelperDataApplicationSettings
+                            tbx.Text = ApplicationSettings
                                .DataReadSQLiteSettings(
                                     dataTable: HelperVariables.DtHelperDataApplicationSettings,
                                     settingTabPage: parentNameToUse,
@@ -278,7 +282,7 @@ public partial class FrmSettings : Form
                     {
                         try
                         {
-                            ckb.CheckState = HelperDataApplicationSettings
+                            ckb.CheckState = ApplicationSettings
                                .DataReadCheckBoxSettingTrueOrFalse(
                                     dataTable: HelperVariables.DtHelperDataApplicationSettings,
                                     settingTabPage: parentNameToUse,
@@ -295,7 +299,7 @@ public partial class FrmSettings : Form
                     else if (control is NumericUpDown nud)
                     {
                         string nudTempValue =
-                            HelperDataApplicationSettings.DataReadSQLiteSettings(
+                            ApplicationSettings.DataReadSQLiteSettings(
                                 dataTable: HelperVariables.DtHelperDataApplicationSettings,
                                 settingTabPage: parentNameToUse,
                                 settingId: control.Name
@@ -328,7 +332,7 @@ public partial class FrmSettings : Form
                     {
                         try
                         {
-                            rbt.Checked = HelperDataApplicationSettings
+                            rbt.Checked = ApplicationSettings
                                .DataReadCheckBoxSettingTrueOrFalse(
                                     dataTable: HelperVariables.DtHelperDataApplicationSettings,
                                     settingTabPage: parentNameToUse,
@@ -407,7 +411,7 @@ public partial class FrmSettings : Form
     private void LoadCustomRulesDGV()
     {
         // Read the SQL
-        HelperVariables.DtCustomRules = HelperDataCustomRules.DataReadSQLiteCustomRules();
+        HelperVariables.DtCustomRules = CustomRules.DataReadSQLiteCustomRules();
         dgv_CustomRules.AutoGenerateColumns = false;
 
         // Bind data
@@ -417,7 +421,7 @@ public partial class FrmSettings : Form
 
         // 01a get list of country codes
         Dictionary<string, string> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(
-            ckb_IncludePredeterminedCountries: HelperDataApplicationSettings
+            ckb_IncludePredeterminedCountries: ApplicationSettings
                .DataReadCheckBoxSettingTrueOrFalse(
                     dataTable: HelperVariables.DtHelperDataApplicationSettings,
                     settingTabPage: "tpg_CustomRules",
@@ -547,7 +551,7 @@ public partial class FrmSettings : Form
     /// </summary>
     private void LoadCustomCityLogicDGV()
     {
-        HelperVariables.DtCustomCityLogic = HelperDataCustomCityAllocationRules
+        HelperVariables.DtCustomCityLogic = CustomCityAllocationRules
            .DataReadSQLiteCustomCityAllocationLogic();
         dgv_CustomCityLogic.AutoGenerateColumns = false;
 
@@ -726,7 +730,7 @@ public partial class FrmSettings : Form
     {
         if (!_importHasBeenProcessed)
         {
-            HelperNonStatic helperNonstatic = new();
+            NonStatic helperNonstatic = new();
             IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
             if (controls != null)
             {
@@ -829,7 +833,7 @@ public partial class FrmSettings : Form
                 }
             }
 
-            HelperDataApplicationSettings.DataTransferSQLiteSettingsFromPreQueue();
+            ApplicationSettings.DataTransferSQLiteSettingsFromPreQueue();
         }
 
         HelperVariables.DtHelperDataApplicationSettingsPreQueue.Clear();
@@ -840,13 +844,13 @@ public partial class FrmSettings : Form
 
         HelperGenericAppStartup.AppStartupGetOverwriteBlankToponomy();
         HelperGenericAppStartup.AppStartupGetToponomyRadiusAndMaxRows();
-        HelperDataCustomRules.DataWriteSQLiteCustomRules();
-        HelperDataCustomCityAllocationRules.DataWriteSQLiteCustomCityAllocationLogic();
+        CustomRules.DataWriteSQLiteCustomRules();
+        CustomCityAllocationRules.DataWriteSQLiteCustomCityAllocationLogic();
         // read back/refresh lists.
         _ = HelperGenericAppStartup.AppStartupReadCustomCityLogic();
 
         // in case it changed or something.
-        HelperVariables.DtCustomRules = HelperDataCustomRules.DataReadSQLiteCustomRules();
+        HelperVariables.DtCustomRules = CustomRules.DataReadSQLiteCustomRules();
         Hide();
     }
 
@@ -893,7 +897,7 @@ public partial class FrmSettings : Form
                 CheckBox txt = box;
                 txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Regular);
                 // see if it's in the settings-change-queue
-                string tmpCtrlVal = HelperDataApplicationSettings.DataReadSQLiteSettings(
+                string tmpCtrlVal = ApplicationSettings.DataReadSQLiteSettings(
                     dataTable: HelperVariables.DtHelperDataApplicationSettings,
                     settingTabPage: ((Control)sender).Parent.Name,
                     settingId: tmpCtrlName
@@ -909,7 +913,7 @@ public partial class FrmSettings : Form
                     // if not....
                     try
                     {
-                        tmpCtrlVal = HelperDataApplicationSettings.DataReadSQLiteSettings(
+                        tmpCtrlVal = ApplicationSettings.DataReadSQLiteSettings(
                             dataTable: HelperVariables.DtHelperDataApplicationSettings,
                             settingTabPage: ((Control)sender).Parent.Name,
                             settingId: tmpCtrlName
@@ -952,7 +956,7 @@ public partial class FrmSettings : Form
                                 SettingValue = tmpCtrlVal
                             }
                         ];
-                        HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
+                        ApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
                     }
                 }
 
@@ -1010,7 +1014,7 @@ public partial class FrmSettings : Form
                     break;
                 case "gbx_MapColourMode":
                     // also set the other values to False
-                    HelperNonStatic helperNonstatic = new();
+                    NonStatic helperNonstatic = new();
                     IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: gbx_MapColourMode);
                     foreach (Control control in controls)
                     {
@@ -1170,7 +1174,7 @@ public partial class FrmSettings : Form
                                      .First().Trim();
 
                 string iso2char =
-                    HelperDataOtherDataRelated.DataGetFirstOrDefaultFromDataTable(
+                    OtherDataRelated.DataGetFirstOrDefaultFromDataTable(
                         dataTableIn: FrmMainApp.DTLanguageMapping,
                         dataColumnFilter: "languageNative", dataColumnReturn: "languageCode", keyEqualsWhat: language);
 
@@ -1206,7 +1210,7 @@ public partial class FrmSettings : Form
         if (nud == nud_ChoiceRadius)
         {
             string tmpLabelText =
-                HelperLocalisationResourceManager.GetResourceValue(control: lbl_Generic_Miles,
+                ResourceManager.GetResourceValue(control: lbl_Generic_Miles,
                     location: "Strings");
 
             lbl_Generic_Miles.Text =
@@ -1261,7 +1265,7 @@ public partial class FrmSettings : Form
     private void btn_ResetToDefaults_Click(object sender,
                                            EventArgs e)
     {
-        HelperDataCustomCityAllocationRules
+        CustomCityAllocationRules
            .DataWriteSQLiteCustomCityAllocationLogicDefaults(resetToDefaults: true);
         // reload
         dgv_CustomCityLogic.Columns.Clear();
@@ -1358,7 +1362,7 @@ public partial class FrmSettings : Form
                         sourceFileName: HelperVariables.SettingsDatabaseFilePath,
                         destFileName: Path.Combine(exportFileDialog.FileName),
                         overwrite: true);
-                    HelperDataSettingsExport.DataExportSettings(
+                    SettingsExport.DataExportSettings(
                         settingsToExportList: ItemsToExport,
                         exportFilePath: Path.Combine(exportFileDialog.FileName));
                 }
@@ -1413,7 +1417,7 @@ public partial class FrmSettings : Form
             if (!ItemsToImport.Contains(item: "no") &&
                 ItemsToImport.Contains(item: "yes"))
             {
-                _importHasBeenProcessed = HelperDataSettingsImport.DataImportSettings(
+                _importHasBeenProcessed = SettingsImport.DataImportSettings(
                     settingsToImportList: ItemsToImport,
                     importFilePath: databaseFileToImport);
 

@@ -1,4 +1,5 @@
 ﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.NonStatic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -58,7 +59,7 @@ public partial class FrmPleaseWaitBox : Form
     /// </summary>
     private void GetControlNames()
     {
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
         foreach (Control control in controls)
         {

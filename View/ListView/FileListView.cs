@@ -1,4 +1,5 @@
 ﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Model;
 using NLog;
 using System;
@@ -652,7 +653,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             int colOrderIndexInt = 0;
 
             colOrderIndexInt = Convert.ToInt16(
-                value: HelperDataApplicationSettings.DataReadSQLiteSettings(
+                value: ApplicationSettings.DataReadSQLiteSettings(
                     dataTable: HelperVariables.DtHelperDataApplicationLayout,
                     settingTabPage: "lvw_FileList",
                     settingId: settingIdToSend));
@@ -676,7 +677,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
             // Read and process width
             settingIdToSend = $"{Name}_{columnHeader.Name}_width";
-            string colWidth = HelperDataApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationLayout,
+            string colWidth = ApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationLayout,
                 settingTabPage: "lvw_FileList",
                 settingId: settingIdToSend);
 
@@ -768,7 +769,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             });
         }
 
-        HelperDataApplicationSettings.DataWriteSQLiteSettings(
+        ApplicationSettings.DataWriteSQLiteSettings(
             settingsToWrite: settingsToWrite);
     }
 

@@ -1,4 +1,8 @@
 ﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.Data;
+using GeoTagNinja.Helpers.FileSystem;
+using GeoTagNinja.Helpers.Generic;
+using GeoTagNinja.Helpers.NonStatic;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using NLog;
 using System;
@@ -19,7 +23,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
     private ExifTool _ExifTool;
     private FrmPleaseWaitBox _frmPleaseWaitBoxInstance;
-    private HelperNonStatic _helperNonStatic = new();
+    private NonStatic _helperNonStatic = new();
 
     /// <summary>
     /// Provides access to the currently running metadata hydration task.
@@ -281,7 +285,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
             try
             {
                 Log.Trace(message: "Files: Adding Parent Folder");
-                string tmpStrParent = HelperFileSystemOperators.FsoGetParent(path: folderOrCollectionFileName);
+                string tmpStrParent = Operators.FsoGetParent(path: folderOrCollectionFileName);
                 if (tmpStrParent != null &&
                     tmpStrParent != SpecialFolder.MyComputer.ToString())
                 {
@@ -529,7 +533,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 string imgFileExtension = imagefileFileInfoItem.Extension.TrimStart('.');
 
                 // only add the sidecar file linkage if the particular extension is marked to use sidecars
-                bool writeXMPSideCar = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
+                bool writeXMPSideCar = Convert.ToBoolean(value: ApplicationSettings.DataReadSQLiteSettings(
                     dataTable: HelperVariables.DtHelperDataApplicationSettings,
                     settingTabPage: "tpg_FileOptions",
                     settingId: $"{imgFileExtension.ToLower()}_ckb_AddXMPSideCar"));
@@ -751,7 +755,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     // as such we do need to do the checksum test regardless of what the files appear like.
 
                     thisCheckSum =
-                        HelperFileSystemGetChecksum.GetChecksum(fileNameWithPath: fileNameWithPathToCheck.FullName);
+                        GeoTagNinja.Helpers.FileSystem.GetChecksum.GetFileChecksum(fileNameWithPath: fileNameWithPathToCheck.FullName);
                     checksumChanged = storedChecksum != thisCheckSum;
 
                     fileNeedsReDEing = fileNeedsReDEing || checksumChanged ||

@@ -279,16 +279,17 @@
     <Compile Include="FrmSplashScreen.Designer.cs">
       <DependentUpon>FrmSplashScreen.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\FileSystem\CloudFileHelpers.cs" />
     <Compile Include="Helpers\HelperControlAndMessageBoxHandling.cs" />
-    <Compile Include="Helpers\HelperDataCacheManager.cs" />
-    <Compile Include="Helpers\HelperDataSettingsExport.cs" />
-    <Compile Include="Helpers\HelperDataSettingsImport.cs" />
-    <Compile Include="Helpers\HelperExifReadTrackFilePath.cs" />
-    <Compile Include="Helpers\HelperExifWriteTrackDataToTrackFile.cs" />
-    <Compile Include="Helpers\HelperExifWriteTrackDataToSideCar.cs" />
-    <Compile Include="Helpers\HelperFileSystemGetChecksum.cs" />
-    <Compile Include="Helpers\HelperGenericAppStartup.cs" />
-    <Compile Include="Helpers\HelperGenericAncillaryListsArrays.cs" />
+    <Compile Include="Helpers\Data\CacheManager.cs" />
+    <Compile Include="Helpers\Data\SettingsExport.cs" />
+    <Compile Include="Helpers\Data\SettingsImport.cs" />
+    <Compile Include="Helpers\Exif\ReadTrackFilePath.cs" />
+    <Compile Include="Helpers\Exif\WriteTrackDataToTrackFile.cs" />
+    <Compile Include="Helpers\Exif\WriteTrackDataToSideCar.cs" />
+    <Compile Include="Helpers\FileSystem\GetChecksum.cs" />
+    <Compile Include="Helpers\Generic\HelperGenericAppStartup.cs" />
+    <Compile Include="Helpers\Generic\HelperGenericAncillaryListsArrays.cs" />
     <Compile Include="FrmAboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -301,16 +302,16 @@
     <Compile Include="FrmManageFavourites.designer.cs">
       <DependentUpon>FrmManageFavourites.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\HelperGenericCalculations.cs" />
-    <Compile Include="Helpers\HelperNonStatic.FileInfo.cs" />
-    <Compile Include="Helpers\HelperNonStatic.AutoUpdater.cs" />
-    <Compile Include="Helpers\HelperLocalisationResourceManager.cs" />
-    <Compile Include="Helpers\HelperNonStatic.FileOperations.cs" />
+    <Compile Include="Helpers\Generic\HelperGenericCalculations.cs" />
+    <Compile Include="Helpers\NonStatic\FileInfo.cs" />
+    <Compile Include="Helpers\NonStatic\AutoUpdater.cs" />
+    <Compile Include="Helpers\Localisation\ResourceManager.cs" />
+    <Compile Include="Helpers\NonStatic\FileOperations.cs" />
     <Compile Include="Model\AppSettingContainer.cs" />
     <Compile Include="Model\Favourite.cs" />
     <Compile Include="Model\GeoSetterFavourite.cs" />
     <Compile Include="Model\MapWebMessage.cs" />
-    <Compile Include="Helpers\HelperLocalisationLanguageManager.cs" />
+    <Compile Include="Helpers\Localisation\LanguageManager.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -332,27 +333,27 @@
     <Compile Include="View\ListView\FileListViewCopyPaste.cs" />
     <Compile Include="View\ListView\FileListViewReadWrite.cs" />
     <Compile Include="View\EditFileForm\EditFileFormGeneric.cs" />
-    <Compile Include="Helpers\HelperAPIGeoNamesToponomyExtractor.cs" />
-    <Compile Include="Helpers\HelperAPIVersionCheckers.cs">
+    <Compile Include="Helpers\API\GeoNamesToponomyExtractor.cs" />
+    <Compile Include="Helpers\API\APIVersionCheckers.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Helpers\HelperDataApplicationSettings.cs" />
-    <Compile Include="Helpers\HelperDataCSVFileOperations.cs" />
-    <Compile Include="Helpers\HelperDataCustomCityAllocationRules.cs" />
-    <Compile Include="Helpers\HelperDataCustomRules.cs" />
-    <Compile Include="Helpers\HelperDataDatabaseAndStartup.cs" />
-    <Compile Include="Helpers\HelperDataFavourites.cs" />
-    <Compile Include="Helpers\HelperDataLanguageTZ.cs" />
-    <Compile Include="Helpers\HelperDataOtherDataRelated.cs" />
-    <Compile Include="Helpers\HelperExifDataPointInteractions.cs" />
-    <Compile Include="Helpers\HelperExifExifToolOperator.cs" />
-    <Compile Include="Helpers\HelperExifReadExifData.cs" />
-    <Compile Include="Helpers\HelperExifReadGetImagePreviews.cs" />
-    <Compile Include="Helpers\HelperExifReadTrackFile.cs" />
-    <Compile Include="Helpers\HelperExifWriteSaveToFile.cs" />
-    <Compile Include="Helpers\HelperFileSystemOperators.cs" />
-    <Compile Include="Helpers\HelperGenericFileLocking.cs" />
-    <Compile Include="Helpers\HelperGenericTypeOperations.cs" />
+    <Compile Include="Helpers\Data\ApplicationSettings.cs" />
+    <Compile Include="Helpers\Data\CSVFileOperations.cs" />
+    <Compile Include="Helpers\Data\CustomCityAllocationRules.cs" />
+    <Compile Include="Helpers\Data\CustomRules.cs" />
+    <Compile Include="Helpers\Data\DatabaseAndStartup.cs" />
+    <Compile Include="Helpers\Data\Favourites.cs" />
+    <Compile Include="Helpers\Data\LanguageTZ.cs" />
+    <Compile Include="Helpers\Data\OtherDataRelated.cs" />
+    <Compile Include="Helpers\Exif\DataPointInteractions.cs" />
+    <Compile Include="Helpers\Exif\ExifToolOperator.cs" />
+    <Compile Include="Helpers\Exif\ReadExifData.cs" />
+    <Compile Include="Helpers\Exif\ReadGetImagePreviews.cs" />
+    <Compile Include="Helpers\Exif\ReadTrackFile.cs" />
+    <Compile Include="Helpers\Exif\WriteSaveToFile.cs" />
+    <Compile Include="Helpers\FileSystem\Operators.cs" />
+    <Compile Include="Helpers\Generic\HelperGenericFileLocking.cs" />
+    <Compile Include="Helpers\Generic\HelperGenericTypeOperations.cs" />
     <Compile Include="Model\DirectoryElementCollection.cs" />
     <Compile Include="Model\DirectoryElement.cs" />
     <Compile Include="Model\ExifToolWrapper.cs" />
@@ -376,10 +377,10 @@
     <Compile Include="FrmPasteWhat.Designer.cs">
       <DependentUpon>FrmPasteWhat.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\HelperNonStatic.cs" />
-    <Compile Include="Helpers\HelperNonStatic.Generic.cs" />
+    <Compile Include="Helpers\NonStatic\NonStatic.cs" />
+    <Compile Include="Helpers\NonStatic\Generic.cs" />
     <Compile Include="Helpers\HelperVariables.cs" />
-    <Compile Include="Helpers\HelperAPIGeoNamesToponomyJSONParser.cs" />
+    <Compile Include="Helpers\API\GeoNamesToponomyJSONParser.cs" />
     <Compile Include="FrmEditFileData.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -398,8 +399,8 @@
     <Compile Include="FrmSettings.Designer.cs">
       <DependentUpon>FrmSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\HelperAPIGeoNamesGeoTagXMLParser.cs" />
-    <Compile Include="Helpers\HelperAPIGitHub.cs" />
+    <Compile Include="Helpers\API\GeoNamesGeoTagXMLParser.cs" />
+    <Compile Include="Helpers\API\GitHub.cs" />
     <Compile Include="View\ListView\ListViewColumnSorter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

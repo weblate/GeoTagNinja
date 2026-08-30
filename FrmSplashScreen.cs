@@ -1,4 +1,4 @@
-﻿using GeoTagNinja.Helpers;
+﻿using GeoTagNinja.Helpers.NonStatic;
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -25,7 +25,7 @@ public partial class FrmSplashScreen : Form
     private void FrmSplashScreen_Load(object sender,
                                       EventArgs e)
     {
-        HelperNonStatic helperNonStatic = new();
+        NonStatic helperNonStatic = new();
         helperNonStatic.CenterForm(frm: this);
         _ = SetForegroundWindow(hWnd: Handle);
         stopWatch.Start();

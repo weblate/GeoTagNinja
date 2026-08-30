@@ -1,10 +1,10 @@
 ﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.NonStatic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using WinFormsDarkThemerNinja;
-
 namespace GeoTagNinja
 {
     public partial class FrmCustomiseFormControls : Form
@@ -54,7 +54,7 @@ namespace GeoTagNinja
 
         private void FrmCustomiseFormControls_Load(object sender, EventArgs e)
         {
-            HelperNonStatic helperNonstatic = new();
+            NonStatic helperNonstatic = new();
             HelperControlAndMessageBoxHandling.ReturnControlText(
                 control: this, senderForm: this);
 

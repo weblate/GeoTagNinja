@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers.Data;
+using GeoTagNinja.Helpers.Localisation;
+using System;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -74,7 +76,7 @@ internal static class HelperControlAndMessageBoxHandling
         {
             FrmMainApp.Log.Trace(message: $"Starting - control: {control.Name}");
 
-            control.Text = HelperLocalisationResourceManager.GetResourceValue(control: control, location: "Strings");
+            control.Text = ResourceManager.GetResourceValue(control: control, location: "Strings");
         }
 
         else if (control is NumericUpDown nud)
@@ -84,7 +86,7 @@ internal static class HelperControlAndMessageBoxHandling
             {
                 FrmMainApp.Log.Trace(message: $"Starting - control: {nud.Name}");
                 _ = decimal.TryParse(
-                    s: HelperDataApplicationSettings.DataReadSQLiteSettings(
+                    s: ApplicationSettings.DataReadSQLiteSettings(
                         dataTable: HelperVariables.DtHelperDataApplicationSettings,
                         settingTabPage: parentNameToUse,
                         settingId: nud.Name
@@ -112,6 +114,6 @@ internal static class HelperControlAndMessageBoxHandling
             controlName = $"frm_{controlName}";
         }
 
-        return HelperLocalisationResourceManager.GetResourceValue(controlName: controlName, location: "Strings");
+        return ResourceManager.GetResourceValue(controlName: controlName, location: "Strings");
     }
 }

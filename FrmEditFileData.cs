@@ -1,4 +1,8 @@
 ﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.Data;
+using GeoTagNinja.Helpers.Exif;
+using GeoTagNinja.Helpers.Generic;
+using GeoTagNinja.Helpers.NonStatic;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.ListView;
 using Microsoft.WindowsAPICodePack.Taskbar;
@@ -15,8 +19,8 @@ using System.Threading;
 using System.Windows.Forms;
 using TimeZoneConverter;
 using static GeoTagNinja.FrmMainApp;
+using static GeoTagNinja.Helpers.Generic.HelperGenericAncillaryListsArrays;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
-using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
 using Themer = WinFormsDarkThemerNinja.Themer;
@@ -201,7 +205,7 @@ public partial class FrmEditFileData : Form
         btn_InsertFromTakenDate.Enabled = false;
 
         Log.Trace(message: "Assinging Labels Start");
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
 
         /// The types of Controls for which values _do not_ come from the selected DE
         List<Type> lstControlTypesNoDEValue =
@@ -383,7 +387,7 @@ public partial class FrmEditFileData : Form
                                             provider: CultureInfo
                                                .InvariantCulture);
 
-                                    string mappedCountryName = HelperDataLanguageTZ
+                                    string mappedCountryName = LanguageTZ
                                        .DataReadDTCountryCodesNames(
                                             queryWhat: LanguageMappingQueryOrReturnWhat.ISO_3166_1A3,
                                             inputVal: cbx_CountryCode.Text,
@@ -738,7 +742,7 @@ public partial class FrmEditFileData : Form
         List<Control> controlsToEnable,
         List<Control> controlsToDisable)
     {
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls =
             helperNonstatic.GetAllControls(control: parentControl);
         foreach (Control item in controls)
@@ -961,7 +965,7 @@ public partial class FrmEditFileData : Form
         if (!string.IsNullOrEmpty(strGPSLatitude) && !string.IsNullOrEmpty(strGPSLongitude))
         {
             dtLocallyStoredToponomyData =
-                HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(
+                ReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(
                     lat: strGPSLatitude,
                     lng: strGPSLongitude,
                     fileNameWithoutPath: dirElemFileToModify.ItemNameWithoutPath);
@@ -985,24 +989,24 @@ public partial class FrmEditFileData : Form
         {
             locallyStoredToponomyDataForLatLng.Add(item: (
                 ElementAttribute.CountryCode,
-                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]]}"));
+                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[ReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]]}"));
             locallyStoredToponomyDataForLatLng.Add(item: (
                 ElementAttribute.Country,
-                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]]}"));
+                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[ReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]]}"));
             locallyStoredToponomyDataForLatLng.Add(item: (
                 ElementAttribute.City,
-                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]]}"));
+                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[ReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]]}"));
             locallyStoredToponomyDataForLatLng.Add(item: (
                 ElementAttribute.State,
-                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]]}"));
+                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[ReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]]}"));
             locallyStoredToponomyDataForLatLng.Add(item: (
                 ElementAttribute.Sublocation,
-                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]]}"));
+                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[ReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]]}"));
             locallyStoredToponomyDataForLatLng.Add(item: (
                 ElementAttribute.GPSAltitude,
-                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude, true)]]}"));
+                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[ReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude, true)]]}"));
 
-            TZ = $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]]}";
+            TZ = $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[ReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]]}";
         }
 
         catch (Exception ex)
@@ -1181,7 +1185,7 @@ public partial class FrmEditFileData : Form
     private void btn_InsertTakenDate_Click(object sender,
         EventArgs e)
     {
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controlsInsideGbx_TakenDate =
             helperNonstatic.GetAllControls(control: gbx_TakenDate);
         _ = lvw_FileListEditImages.SelectedItems[index: 0]
@@ -1242,9 +1246,9 @@ public partial class FrmEditFileData : Form
                 ShowDEDataInRelevantControls(dirElemFileToModify: dirElemFileToModify);
 
                 pbx_imagePreview.Image = null;
-                await HelperExifReadGetImagePreviews.GenericCreateImagePreview(
+                await ReadGetImagePreviews.GenericCreateImagePreview(
                     directoryElement: dirElemFileToModify,
-                    initiator: HelperExifReadGetImagePreviews.Initiator.FrmEditFileData);
+                    initiator: ReadGetImagePreviews.Initiator.FrmEditFileData);
             }
             else
             {
@@ -1427,7 +1431,7 @@ public partial class FrmEditFileData : Form
         {
             DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;
 
-            await HelperExifDataPointInteractions.ExifRemoveLocationData(
+            await DataPointInteractions.ExifRemoveLocationData(
              dirElemFileToModify: dirElemFileToModify,
              attributeVersion: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
         }
@@ -1582,7 +1586,7 @@ public partial class FrmEditFileData : Form
                     string countryNameMappingResult;
                     if (senderName == "cbx_CountryCode")
                     {
-                        countryNameMappingResult = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
+                        countryNameMappingResult = LanguageTZ.DataReadDTCountryCodesNames(
                             queryWhat: LanguageMappingQueryOrReturnWhat.ISO_3166_1A3,
                             inputVal: sndr.Text,
                             returnWhat: LanguageMappingQueryOrReturnWhat.Country
@@ -1594,7 +1598,7 @@ public partial class FrmEditFileData : Form
                     }
                     else if (senderName == "cbx_Country")
                     {
-                        countryNameMappingResult = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
+                        countryNameMappingResult = LanguageTZ.DataReadDTCountryCodesNames(
                             queryWhat: LanguageMappingQueryOrReturnWhat.Country,
                             inputVal: sndr.Text,
                             returnWhat: LanguageMappingQueryOrReturnWhat.ISO_3166_1A3
@@ -1846,7 +1850,7 @@ public partial class FrmEditFileData : Form
     private void btn_InsertCreateDate_Click(object sender,
         EventArgs e)
     {
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
 
         ListView lvw = lvw_FileListEditImages;
         ListViewItem lvi = lvw.SelectedItems[index: 0];

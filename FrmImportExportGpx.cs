@@ -1,4 +1,8 @@
 ﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.Data;
+using GeoTagNinja.Helpers.Exif;
+using GeoTagNinja.Helpers.Generic;
+using GeoTagNinja.Helpers.NonStatic;
 using GeoTagNinja.Model;
 using System;
 using System.Collections.Generic;
@@ -7,8 +11,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using TimeZoneConverter;
+using static GeoTagNinja.Helpers.Generic.HelperGenericAncillaryListsArrays;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
-using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
 using Themer = WinFormsDarkThemerNinja.Themer;
 
 namespace GeoTagNinja;
@@ -60,7 +64,7 @@ public partial class FrmImportExportGpx : Form
         ofd_importOneFile.Filter = gpxExtensionsFilter;
 
         // set label texts and combobox items
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
         foreach (Control control in controls)
         {
@@ -177,7 +181,7 @@ public partial class FrmImportExportGpx : Form
 
         static string GetStoredUserSettingValue(string settingID)
         {
-            return HelperDataApplicationSettings.DataReadSQLiteSettings(
+            return ApplicationSettings.DataReadSQLiteSettings(
                 dataTable: HelperVariables.DtHelperDataApplicationSettings,
                 settingTabPage: "tpg_ImportExport_Import",
                 settingId: settingID,
@@ -409,7 +413,7 @@ public partial class FrmImportExportGpx : Form
                     _lastCompareAgainstChoice = cbx_ImportTimeAgainst.Text;
                     _lastTimeZoneChoice = ckb_UseTimeZone.Checked ? cbx_ImportUseTimeZone.Text : null;
 
-                    await HelperExifReadTrackFile.ExifGetTrackSyncData(
+                    await ReadTrackFile.ExifGetTrackSyncData(
                         trackFileLocationType: trackFileLocationType,
                         trackFileLocationVal: trackFileLocationVal,
                         compareTZAgainst: cbx_ImportTimeAgainst.Text,
@@ -448,7 +452,7 @@ public partial class FrmImportExportGpx : Form
 
                 GenerateFMTFile(includeAltitude: ckb_ExportTrackIncludeAltitude.Checked,
                     exportFileFMTTimeBasis: cbx_ExportTrackTimeStampType.Text);
-                await HelperExifWriteTrackDataToTrackFile.ExifWriteTrackDataToTrackFile(fileList: exportFileList,
+                await WriteTrackDataToTrackFile.ExifWriteTrackDataToTrackFile(fileList: exportFileList,
                     outFilePath: tbx_SaveTrackTo.Text);
                 Hide();
                 break;
@@ -573,7 +577,7 @@ public partial class FrmImportExportGpx : Form
 
         if (settingsToWrite.Count > 0)
         {
-            HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
+            ApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
         }
 
         Themer.ShowMessageBox(message:

@@ -1,4 +1,6 @@
 ﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.Generic;
+using GeoTagNinja.Helpers.NonStatic;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.ListView;
 using Microsoft.WindowsAPICodePack.Taskbar;
@@ -149,7 +151,7 @@ public partial class FrmPasteWhat : Form
     private void FrmPasteWhat_Load(object sender,
                                    EventArgs e)
     {
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         HelperControlAndMessageBoxHandling.ReturnControlText(
             control: this, senderForm: this);
 
@@ -206,7 +208,7 @@ public partial class FrmPasteWhat : Form
             "GPSSpeed"
         ];
 
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
 
         ListView lvw;
@@ -758,7 +760,7 @@ public partial class FrmPasteWhat : Form
     private void btn_AllData_All_Click(object sender,
                                        EventArgs e)
     {
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
         foreach (Control control in controls)
         {
@@ -770,7 +772,7 @@ public partial class FrmPasteWhat : Form
     private void btn_AllData_None_Click(object sender,
                                         EventArgs e)
     {
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
         foreach (Control control in controls)
         {
@@ -782,7 +784,7 @@ public partial class FrmPasteWhat : Form
     private void btn_PullMostRecentPasteSettings_Click(object sender,
                                                        EventArgs e)
     {
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
         foreach (Control control in controls)
         {
@@ -796,7 +798,7 @@ public partial class FrmPasteWhat : Form
     private void btn_GPSData_All_Click(object sender,
                                        EventArgs e)
     {
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
         foreach (Control control in controls)
         {
@@ -816,7 +818,7 @@ public partial class FrmPasteWhat : Form
     private void btn_GPSData_None_Click(object sender,
                                         EventArgs e)
     {
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
         foreach (Control control in controls)
         {
@@ -840,7 +842,7 @@ public partial class FrmPasteWhat : Form
     private void btn_LocationData_All_Click(object sender,
                                             EventArgs e)
     {
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
         foreach (Control control in controls)
         {
@@ -860,7 +862,7 @@ public partial class FrmPasteWhat : Form
     private void btn_LocationData_None_Click(object sender,
                                              EventArgs e)
     {
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
         foreach (Control control in controls)
         {
@@ -884,7 +886,7 @@ public partial class FrmPasteWhat : Form
     private void btn_Dates_All_Click(object sender,
                                      EventArgs e)
     {
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
         foreach (Control control in controls)
         {
@@ -904,7 +906,7 @@ public partial class FrmPasteWhat : Form
     private void btn_Dates_None_Click(object sender,
                                       EventArgs e)
     {
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
         foreach (Control control in controls)
         {

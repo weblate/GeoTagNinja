@@ -1,4 +1,5 @@
 ﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.Generic;
 using GeoTagNinja.Model;
 using System;
 using System.Windows.Forms;

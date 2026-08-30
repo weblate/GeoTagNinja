@@ -1,4 +1,6 @@
 ﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.Data;
+using GeoTagNinja.Helpers.NonStatic;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -82,7 +84,7 @@ public partial class FrmMainApp
     {
         Log.Info(message: "Starting");
 
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
         string toolStripMenuItemName;
         string toolStripMenuItemText;
@@ -209,7 +211,7 @@ public partial class FrmMainApp
 
         try
         {
-            nud_lat.Text = HelperDataApplicationSettings.DataReadSQLiteSettings(
+            nud_lat.Text = ApplicationSettings.DataReadSQLiteSettings(
                 dataTable: HelperVariables.DtHelperDataApplicationSettings,
                 settingTabPage: "generic",
                 settingId: "lastLat"
@@ -219,7 +221,7 @@ public partial class FrmMainApp
                 nud_lat.Value = Convert.ToDecimal(value: nud_lat.Text, provider: CultureInfo.CurrentCulture);
             }
 
-            nud_lng.Text = HelperDataApplicationSettings.DataReadSQLiteSettings(
+            nud_lng.Text = ApplicationSettings.DataReadSQLiteSettings(
                 dataTable: HelperVariables.DtHelperDataApplicationSettings,
                 settingTabPage: "generic",
                 settingId: "lastLng"
@@ -306,7 +308,7 @@ public partial class FrmMainApp
                  in settingsApplicationDesignValuesKeysList)
         {
             string dataInSQL =
-                HelperDataApplicationSettings.DataReadSQLiteSettings(
+                ApplicationSettings.DataReadSQLiteSettings(
                     dataTable: HelperVariables.DtHelperDataApplicationSettings,
                     settingTabPage: "generic",
                     settingId: settingsApplicationDesignValue, returnBlankIfNull: true);

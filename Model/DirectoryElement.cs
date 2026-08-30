@@ -1,5 +1,7 @@
 ﻿#nullable enable
 using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.Exif;
+using GeoTagNinja.Helpers.Generic;
 using GeoTagNinja.View.ListView;
 using NLog;
 using System;
@@ -1330,7 +1332,7 @@ public class DirectoryElement
         try
         {
             // this only works for the basic file types
-            HelperExifReadGetImagePreviews.UseWindowsImageHandlerToCreateThumbnail(
+            ReadGetImagePreviews.UseWindowsImageHandlerToCreateThumbnail(
                 fileNameIn: fileNameWithPath,
                 fileNameOut: generatedFileName,
                 maxWidth: FileListView.ThumbnailSize,
@@ -1347,9 +1349,9 @@ public class DirectoryElement
             {
                 // Exiftool is acceptable speed and works most of the time but outputs a large file
                 Task task =
-                    HelperExifReadGetImagePreviews.UseExifToolToGeneratePreviewsOrThumbnails(
+                    ReadGetImagePreviews.UseExifToolToGeneratePreviewsOrThumbnails(
                         fileNameWithPath: fileNameWithPath,
-                        initiator: HelperExifReadGetImagePreviews.Initiator.FrmMainAppListViewThumbnail,
+                        initiator: ReadGetImagePreviews.Initiator.FrmMainAppListViewThumbnail,
                         addSmallThumbnailToFileName: true
                     );
             }
@@ -1374,7 +1376,7 @@ public class DirectoryElement
                     // yes i know this line duplicates the above for 0-index but alas.
                     if (!File.Exists(path: generatedFileName))
                     {
-                        HelperExifReadGetImagePreviews.UseLibRawToGenerateThumbnail(
+                        ReadGetImagePreviews.UseLibRawToGenerateThumbnail(
                             originalImagePath: fileNameWithPath,
                             generatedJpegPath: generatedFileName,
                             thumbnailIndex: i);
@@ -1392,7 +1394,7 @@ public class DirectoryElement
         {
             try
             {
-                HelperExifReadGetImagePreviews.UseLibRawToGenerateFullImage(
+                ReadGetImagePreviews.UseLibRawToGenerateFullImage(
                     originalImagePath: fileNameWithPath,
                     generatedJpegPath: generatedFileName,
                     imgWidth: FileListView.ThumbnailSize,
@@ -1409,7 +1411,7 @@ public class DirectoryElement
         {
             try
             {
-                HelperExifReadGetImagePreviews.UseMagickImageToGeneratePreview
+                ReadGetImagePreviews.UseMagickImageToGeneratePreview
                 (
                     originalImagePath: fileNameWithPath,
                     generatedJpegPath: generatedFileName,

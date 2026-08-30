@@ -1,4 +1,7 @@
 ﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.Data;
+using GeoTagNinja.Helpers.Generic;
+using GeoTagNinja.Helpers.NonStatic;
 using GeoTagNinja.Model;
 using Microsoft.VisualBasic;
 using System;
@@ -24,7 +27,7 @@ public partial class FrmManageFavourites : Form
     {
         HelperControlAndMessageBoxHandling.ReturnControlText(control: this, senderForm: this);
 
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
         foreach (Control control in controls)
         {
@@ -83,7 +86,7 @@ public partial class FrmManageFavourites : Form
             return;
         }
 
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
         foreach (Control control in controls)
         {
@@ -110,7 +113,7 @@ public partial class FrmManageFavourites : Form
             else if (control.Name == "cbx_Country")
             {
                 string countryCode = favourite.CountryCode;
-                string countryNameMappingResult = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
+                string countryNameMappingResult = LanguageTZ.DataReadDTCountryCodesNames(
                     queryWhat: LanguageMappingQueryOrReturnWhat.ISO_3166_1A3,
                     inputVal: countryCode,
                     returnWhat: LanguageMappingQueryOrReturnWhat.Country);
@@ -139,7 +142,7 @@ public partial class FrmManageFavourites : Form
         EventArgs e)
     {
         string oldName = cbx_Favourites.Text;
-        string countryCode = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
+        string countryCode = LanguageTZ.DataReadDTCountryCodesNames(
             queryWhat: LanguageMappingQueryOrReturnWhat.Country,
             inputVal: cbx_Country.Text,
             returnWhat: LanguageMappingQueryOrReturnWhat.ISO_3166_1A3);
@@ -154,7 +157,7 @@ public partial class FrmManageFavourites : Form
             favourite.Sublocation = tbx_Sublocation.Text;
         }
 
-        HelperDataFavourites.DataWriteSQLiteClearAndUpdateFavourites();
+        Favourites.DataWriteSQLiteClearAndUpdateFavourites();
         Themer.ShowMessageBox(message:
             HelperControlAndMessageBoxHandling.ReturnControlText(
                 controlName: "mbx_FrmMainApp_InfoFavouriteSaved",
@@ -168,7 +171,7 @@ public partial class FrmManageFavourites : Form
         RefreshCbxFavouritesItems();
 
         // reset labels
-        HelperNonStatic helperNonstatic = new();
+        NonStatic helperNonstatic = new();
         IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
         foreach (Control control in controls)
         {
@@ -197,14 +200,14 @@ public partial class FrmManageFavourites : Form
     {
         if (!_frmNowLoadingFavouriteData)
         {
-            HelperNonStatic helperNonstatic = new();
+            NonStatic helperNonstatic = new();
             IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
             foreach (Control control in controls)
             {
                 if (control is TextBox txt)
                 {
                     string oldText =
-                        HelperDataOtherDataRelated.DataGetFirstOrDefaultFromKVPList(
+                        OtherDataRelated.DataGetFirstOrDefaultFromKVPList(
                             kvpListIn: _originalFavouritesPresented,
                             keyEqualsWhat: control.Name);
                     txt.Font = oldText != txt.Text
@@ -227,7 +230,7 @@ public partial class FrmManageFavourites : Form
             newName.Length > 0)
         {
             favourite.FavouriteName = newName;
-            HelperDataFavourites.DataWriteSQLiteClearAndUpdateFavourites();
+            Favourites.DataWriteSQLiteClearAndUpdateFavourites();
 
             // update in dropdown
             RefreshCbxFavouritesItems();

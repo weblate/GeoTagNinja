@@ -1,5 +1,11 @@
 ﻿using AutoUpdaterDotNET;
 using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.API;
+using GeoTagNinja.Helpers.Data;
+using GeoTagNinja.Helpers.Exif;
+using GeoTagNinja.Helpers.FileSystem;
+using GeoTagNinja.Helpers.Generic;
+using GeoTagNinja.Helpers.NonStatic;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
 using GeoTagNinja.View.EditFileForm;
@@ -242,7 +248,7 @@ public partial class FrmMainApp : Form
         SuspendLayout();
         Task[] tasks =
         [
-            HelperDataOtherDataRelated.GenericCreateDataTables(),
+            OtherDataRelated.GenericCreateDataTables(),
             HelperGenericAppStartup.AppStartupCreateDatabaseFile(),
             HelperGenericAppStartup.AppStartupWriteDefaultSettings(),
             HelperGenericAppStartup.AppStartupReadSQLiteTables(),
@@ -252,7 +258,7 @@ public partial class FrmMainApp : Form
             HelperGenericAppStartup.AppStartupApplyDefaults(
                 settingTabPage: "tpg_Application",
                 actuallyRunningAtStartup: true),
-            HelperDataLanguageTZ.DataReadCountryCodeDataFromWikipediaData(),
+            LanguageTZ.DataReadCountryCodeDataFromWikipediaData(),
             HelperGenericAppStartup.AppStartupCheckWebView2(),
             AppStartupInitializeComponentFrmMainApp(),
             AppStartupSetAppTheme(),
@@ -291,7 +297,7 @@ public partial class FrmMainApp : Form
 
         try
         {
-            HelperFileSystemOperators.FsoCleanUpUserFolder();
+            Operators.FsoCleanUpUserFolder();
         }
         catch (Exception ex)
         {
@@ -344,7 +350,7 @@ public partial class FrmMainApp : Form
         // {
         //     await Task.Delay(500);
         // }
-        await HelperAPIVersionCheckers.CheckForNewVersions();
+        await APIVersionCheckers.CheckForNewVersions();
 
         LaunchAutoUpdater();
         Log.Info(message: "OnLoad: Done.");
@@ -424,7 +430,7 @@ public partial class FrmMainApp : Form
     /// application startup to enable automatic update functionality.</remarks>
     private static void LaunchAutoUpdater()
     {
-        HelperNonStatic updateHelper = new();
+        NonStatic updateHelper = new();
 #if DEBUG
         // AutoUpdater.InstalledVersion = new Version(version: "1.17.8646"); // here for testing only.
 #endif
@@ -452,7 +458,7 @@ public partial class FrmMainApp : Form
         NamedPipeServer.stopServing();
 
         // this will trigger a write-to-file question/process
-        await HelperFileSystemOperators.FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: true);
+        await Operators.FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: true);
 
         PerformAppClosingProcedure();
     }
@@ -474,8 +480,8 @@ public partial class FrmMainApp : Form
         // Clean up
         Log.Trace(message: "Set pbx_imagePreview.Image = null");
         pbx_imagePreview.Image = null; // unlocks files. theoretically.
-        HelperDataApplicationSettings.DataDeleteSQLiteSettingsCleanup();
-        HelperDataApplicationSettings.DataVacuumDatabase();
+        ApplicationSettings.DataDeleteSQLiteSettingsCleanup();
+        ApplicationSettings.DataVacuumDatabase();
 
         // Shut down ExifTool
         Log.Debug(message: "OnClose: Dispose ExifTool");
@@ -529,7 +535,7 @@ public partial class FrmMainApp : Form
         }
 
         // Clean up Roaming folder
-        HelperFileSystemOperators.FsoCleanUpUserFolder();
+        Operators.FsoCleanUpUserFolder();
         Log.Debug(message: "OnClose: Done.");
     }
 
@@ -578,7 +584,7 @@ public partial class FrmMainApp : Form
                     SettingValue = persistDataSetting.Value
                 }));
         }
-        HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
+        ApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
 
         // Log stuff
         foreach (KeyValuePair<string, string> keyValuePair in persistDataSettingsListGeneric)
@@ -689,10 +695,10 @@ public partial class FrmMainApp : Form
         // if the user zooms out too much they can encounter an "unreal" coordinate.
 
         double correctedDblLat =
-            HelperExifDataPointInteractions.GenericCorrectInvalidCoordinate(
+            DataPointInteractions.GenericCorrectInvalidCoordinate(
                 coordHalfPair: dblLat);
         double correctedDblLng =
-            HelperExifDataPointInteractions.GenericCorrectInvalidCoordinate(
+            DataPointInteractions.GenericCorrectInvalidCoordinate(
                 coordHalfPair: dblLng);
         nud_lat.Text = correctedDblLat.ToString(provider: CultureInfo.InvariantCulture);
         nud_lng.Text = correctedDblLng.ToString(provider: CultureInfo.InvariantCulture);
@@ -1945,7 +1951,7 @@ public partial class FrmMainApp : Form
                 message:
                 "Replace hard-coded values in the html code - UserSettingArcGisApiKey is null");
             HelperVariables.UserSettingArcGisApiKey =
-                HelperDataApplicationSettings.DataReadSQLiteSettings(
+                ApplicationSettings.DataReadSQLiteSettings(
                     dataTable: HelperVariables.DtHelperDataApplicationSettings,
                     settingTabPage: "tpg_Application",
                     settingId: "tbx_ARCGIS_APIKey",
@@ -2013,7 +2019,7 @@ public partial class FrmMainApp : Form
         // also the problem here is that the exiftoolAsync can still be running and locking the file.
 
         HashSet<string> distinctGUIDs = FrmMainApp.DirectoryElements.FindDirtyElements();
-        await HelperExifWriteSaveToFile.ExifWriteExifToFile(distinctGUIDs: distinctGUIDs);
+        await WriteSaveToFile.ExifWriteExifToFile(distinctGUIDs: distinctGUIDs);
 
         HelperGenericFileLocking.FilesAreBeingSaved = false;
     }
@@ -2052,7 +2058,7 @@ public partial class FrmMainApp : Form
             }
         }
         HashSet<string> distinctGUIDs = FrmMainApp.DirectoryElements.FindDirtyElements(optionalListOfDEs: directoryElements);
-        await HelperExifWriteSaveToFile.ExifWriteExifToFile(distinctGUIDs: distinctGUIDs);
+        await WriteSaveToFile.ExifWriteExifToFile(distinctGUIDs: distinctGUIDs);
 
         HelperGenericFileLocking.FilesAreBeingSaved = false;
     }
@@ -2153,7 +2159,7 @@ public partial class FrmMainApp : Form
     private void tmi_File_Quit_Click(object sender,
                                      EventArgs e)
     {
-        HelperFileSystemOperators.FsoCleanUpUserFolder();
+        Operators.FsoCleanUpUserFolder();
         Application.Exit();
     }
 
@@ -2247,7 +2253,7 @@ public partial class FrmMainApp : Form
         CurrentFolder ??= Path.GetFullPath(path: tbx_FolderName.Text);
         try
         {
-            string CurrentFoldersParent = HelperFileSystemOperators.FsoGetParent(path: CurrentFolder);
+            string CurrentFoldersParent = Operators.FsoGetParent(path: CurrentFolder);
         }
         catch
         {
@@ -2267,7 +2273,7 @@ public partial class FrmMainApp : Form
             FlatMode = !AskIfUserWantsToDisableFlatMode();
         }
 
-        await HelperFileSystemOperators
+        await Operators
            .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
         if (HelperVariables.OperationChangeFolderIsOkay)
         {
@@ -2284,7 +2290,7 @@ public partial class FrmMainApp : Form
                     {
                         lvw_FileList.ClearData();
                         // DirectoryElements.Clear();
-                        HelperFileSystemOperators.FsoCleanUpUserFolder();
+                        Operators.FsoCleanUpUserFolder();
                         FolderName = tbx_FolderName.Text;
                         await lvw_FileList_LoadOrUpdate();
                     }
@@ -2320,7 +2326,7 @@ public partial class FrmMainApp : Form
             try
             {
                 CurrentFoldersParent =
-                    HelperFileSystemOperators.FsoGetParent(path: CurrentFolder);
+                    Operators.FsoGetParent(path: CurrentFolder);
             }
             catch
             {
@@ -2451,7 +2457,7 @@ public partial class FrmMainApp : Form
         Log.Info(message: "Starting");
 
         HelperVariables.OperationChangeFolderIsOkay = false;
-        await HelperFileSystemOperators
+        await Operators
            .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
         Log.Trace(message: $"OperationChangeFolderIsOkay: {HelperVariables.OperationChangeFolderIsOkay}");
 
@@ -2473,7 +2479,7 @@ public partial class FrmMainApp : Form
         Log.Info(message: "Starting");
 
         HelperVariables.OperationChangeFolderIsOkay = false;
-        await HelperFileSystemOperators
+        await Operators
            .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
         Log.Trace(message: $"OperationChangeFolderIsOkay: {HelperVariables.OperationChangeFolderIsOkay}");
 
@@ -2486,7 +2492,7 @@ public partial class FrmMainApp : Form
                 try
                 {
                     tmpStrParent =
-                        HelperFileSystemOperators.FsoGetParent(path: tbx_FolderName.Text);
+                        Operators.FsoGetParent(path: tbx_FolderName.Text);
                 }
                 catch
                 {
@@ -2575,7 +2581,7 @@ public partial class FrmMainApp : Form
                     HelperGenericFileLocking.GenericLockLockFile(
                         fileNameWithoutPath: dirElemFileToModify.ItemNameWithoutPath);
 
-                    await HelperExifDataPointInteractions.ExifRemoveLocationData(
+                    await DataPointInteractions.ExifRemoveLocationData(
                      dirElemFileToModify: dirElemFileToModify,
                      attributeVersion: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
 
@@ -2654,7 +2660,7 @@ public partial class FrmMainApp : Form
         if (e.KeyCode == Keys.Enter)
         {
             HelperVariables.OperationChangeFolderIsOkay = false;
-            await HelperFileSystemOperators
+            await Operators
                .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
             if (HelperVariables.OperationChangeFolderIsOkay)
             {
@@ -2693,7 +2699,7 @@ public partial class FrmMainApp : Form
         // also the problem here is that the exiftoolAsync can still be running and locking the file.
 
         HashSet<string> distinctGUIDs = FrmMainApp.DirectoryElements.FindDirtyElements();
-        await HelperExifWriteSaveToFile.ExifWriteExifToFile(distinctGUIDs: distinctGUIDs);
+        await WriteSaveToFile.ExifWriteExifToFile(distinctGUIDs: distinctGUIDs);
 
         HelperGenericFileLocking.FilesAreBeingSaved = false;
         //DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
@@ -2732,7 +2738,7 @@ public partial class FrmMainApp : Form
                                                   provider: CultureInfo.InvariantCulture);
 
             DataTable dtToponomy =
-                HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(
+                ReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(
                     lat: strGPSLatitude,
                     lng: strGPSLongitude,
                     fileNameWithoutPath: fileNameWithoutPath);
@@ -2745,10 +2751,10 @@ public partial class FrmMainApp : Form
                     [
                         (ElementAttribute.CountryCode, dtToponomy.Rows[index: 0][
                             columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                                HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]].ToString()),
+                                ReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]].ToString()),
                         (ElementAttribute.Country, dtToponomy.Rows[index: 0][
                             columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                                HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]].ToString())
+                                ReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]].ToString())
                     ];
 
                 // there's only four in there.
@@ -2763,7 +2769,7 @@ public partial class FrmMainApp : Form
                         _ => throw new NotImplementedException(),
                     };
 
-                    string settingVal = HelperExifReadExifData.ReplaceBlankToponomy(
+                    string settingVal = ReadExifData.ReplaceBlankToponomy(
                         settingId: attribute,
                         settingValue: dtToponomy.Rows[index: 0][columnName: colName]
                                                 .ToString());
@@ -2773,7 +2779,7 @@ public partial class FrmMainApp : Form
                 // timeZone is a bit special but that's just how we all love it....not.
                 string TZ = dtToponomy.Rows[index: 0][columnName:
                     HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                        HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]].ToString();
+                        ReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]].ToString();
 
                 bool _ = DateTime.TryParse(s: lvi.SubItems[index: lvw_FileList
                                                                  .Columns[
@@ -3173,7 +3179,7 @@ public partial class FrmMainApp : Form
             case DirectoryElement.ElementType.Drive:
                 // check for outstanding files first and save if user wants
                 HelperVariables.OperationChangeFolderIsOkay = false;
-                await HelperFileSystemOperators
+                await Operators
                    .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
                 CurrentFolder = tbx_FolderName.Text;
                 if (HelperVariables.OperationChangeFolderIsOkay)
@@ -3243,9 +3249,9 @@ nowSavingExif: false));
 
                 if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                 {
-                    await HelperExifReadGetImagePreviews.GenericCreateImagePreview(
+                    await ReadGetImagePreviews.GenericCreateImagePreview(
                         directoryElement: dirElemFileToModify,
-                        initiator: HelperExifReadGetImagePreviews.Initiator.FrmMainAppPictureBox);
+                        initiator: ReadGetImagePreviews.Initiator.FrmMainAppPictureBox);
                 }
                 else
                 {
@@ -3419,7 +3425,7 @@ nowSavingExif: false));
                 {
                     // check for outstanding files first and save if user wants
                     HelperVariables.OperationChangeFolderIsOkay = false;
-                    await HelperFileSystemOperators
+                    await Operators
                        .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
                     if (HelperVariables.OperationChangeFolderIsOkay)
                     {
@@ -3456,7 +3462,7 @@ nowSavingExif: false));
             lvw_FileList.SelectedItems.Clear();
 
             HashSet<string> distinctGUIDs = FrmMainApp.DirectoryElements.FindDirtyElements();
-            await HelperExifWriteSaveToFile.ExifWriteExifToFile(distinctGUIDs: distinctGUIDs);
+            await WriteSaveToFile.ExifWriteExifToFile(distinctGUIDs: distinctGUIDs);
 
             HelperGenericFileLocking.FilesAreBeingSaved = false;
             //DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
@@ -3691,7 +3697,7 @@ nowSavingExif: false));
                 favourite.Sublocation = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.Sublocation, notFoundValue: "");
 
                 _ = Favourites.Add(item: favourite);
-                HelperDataFavourites.DataWriteSQLiteClearAndUpdateFavourites();
+                Helpers.Data.Favourites.DataWriteSQLiteClearAndUpdateFavourites();
 
                 ClearReloadFavouritesDropDownValues();
                 Themer.ShowMessageBox(message:
@@ -4194,7 +4200,7 @@ nowSavingExif: false));
                     path2: "geosetter_export", path3: "favorites.xml")
                 : fi.FullName;
 
-            HelperDataFavourites.ParseGeoSetterFavouritesXmlToFavourite(fileNameToParse: fileNameToParse);
+            Helpers.Data.Favourites.ParseGeoSetterFavouritesXmlToFavourite(fileNameToParse: fileNameToParse);
 
             string exifToolFilesDir =
                 Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "geosetter_export");
