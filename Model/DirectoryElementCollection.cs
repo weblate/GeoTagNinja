@@ -655,6 +655,17 @@ public class DirectoryElementCollection : List<DirectoryElement>
             {
                 // Prefer Sidecar, then RAW
                 string fileToRead = de.SidecarFile?.FullName ?? de.FileNameWithPath;
+                // Guard against ExifTool attempting to read cloud-only files
+                if (CloudFileHelpers.IsCloudOnlyPlaceholder(filePath: fileToRead))
+                {
+                    de.IsCloudOffline = true;
+                    Log.Warn(message: $"Skipping metadata hydration for online-only file: {fileToRead}");
+                    // Optionally set default/stub attributes on 'de' to indicate offline status
+                    onUpdated?.Invoke(de);
+                    continue;
+                }
+
+                de.IsCloudOffline = false;
                 List<KeyValuePair<string, string>> props = [];
 
                 // Run ExifTool
@@ -715,24 +726,29 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 return;
             }
 
-            // 1. Find the element in THIS collection (the cache)
+            // 1. Find or create the element
             DirectoryElement? de = this.FirstOrDefault(x => x.FileNameWithPath == imagefileFileInfoItem.FullName);
             bool isNew = de == null;
 
             if (isNew)
             {
-                de = new DirectoryElement(imagefileFileInfoItem.Name, DirectoryElement.ElementType.File, imagefileFileInfoItem.FullName);
-                Add(de);
+                de = new DirectoryElement(itemNameWithoutPath: imagefileFileInfoItem.Name, type: DirectoryElement.ElementType.File, fileNameWithPath: imagefileFileInfoItem.FullName);
+                Add(item: de);
             }
 
-            // 2. THE LINK: Find the sidecar in the list passed to this method
-            string baseName = Path.GetFileNameWithoutExtension(imagefileFileInfoItem.Name);
+            // Check cloud status
+            bool isCloudOnly = CloudFileHelpers.IsCloudOnlyPlaceholder(fileInfo: imagefileFileInfoItem);
+            // de.IsCloudOnly = isCloudOnly; // Optionally expose this on your model
+
+            // 2. Map Sidecar
+            string baseName = Path.GetFileNameWithoutExtension(path: imagefileFileInfoItem.Name);
             de.SidecarFile = sidecarFiles.FirstOrDefault(x =>
                 x.Name.Equals(baseName + ".xmp", StringComparison.InvariantCultureIgnoreCase));
 
-            // 3. Checksum Logic (Abbreviated for clarity)
+            // 3. Checksum Logic
             bool fileNeedsReDEing = isNew;
             bool checksumChanged = false;
+
             for (int i = 0; i <= 1; i++)
             {
                 string thisCheckSum = string.Empty;
@@ -740,11 +756,16 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 FileInfo fileNameWithPathToCheck = i == 0 ? imagefileFileInfoItem : de.SidecarFile;
 
                 // note to self: jpgs have no sidecars.
-                if (fileNameWithPathToCheck != null &&
-                    File.Exists(path: fileNameWithPathToCheck.FullName))
+                if (fileNameWithPathToCheck != null && File.Exists(path: fileNameWithPathToCheck.FullName))
                 {
-                    if (HelperVariables.FileChecksumDictionary.TryGetValue(key: fileNameWithPathToCheck.FullName,
-                            value: out string value))
+                    // Skip reading/checksumming if the target is online-only
+                    if (CloudFileHelpers.IsCloudOnlyPlaceholder(fileInfo: fileNameWithPathToCheck))
+                    {
+                        Log.Info($"Skipping checksum for cloud placeholder: {fileNameWithPathToCheck.FullName}");
+                        continue;
+                    }
+
+                    if (HelperVariables.FileChecksumDictionary.TryGetValue(key: fileNameWithPathToCheck.FullName, value: out string value))
                     {
                         storedChecksum = value;
                     }
@@ -753,19 +774,16 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     // xmp files can be modified within a single byte and then saved and have their datetime stamp changed to takendatetime
                     // so basically we could have two files that look identical on the surface but differ in content. 
                     // as such we do need to do the checksum test regardless of what the files appear like.
-
-                    thisCheckSum =
-                        GeoTagNinja.Helpers.FileSystem.GetChecksum.GetFileChecksum(fileNameWithPath: fileNameWithPathToCheck.FullName);
+                    // Safe to run checksum on local files
+                    thisCheckSum = Helpers.FileSystem.GetChecksum.GetFileChecksum(fileNameWithPath: fileNameWithPathToCheck.FullName);
                     checksumChanged = storedChecksum != thisCheckSum;
 
                     fileNeedsReDEing = fileNeedsReDEing || checksumChanged ||
-                                       !HelperVariables.FileChecksumDictionary.ContainsKey(
-                                           key: fileNameWithPathToCheck.FullName);
+                                       !HelperVariables.FileChecksumDictionary.ContainsKey(fileNameWithPathToCheck.FullName);
                 }
 
                 if (fileNeedsReDEing && !string.IsNullOrWhiteSpace(value: thisCheckSum))
                 {
-                    // update HelperVariables.fileChecksumhDictionary
                     HelperVariables.FileChecksumDictionary[key: fileNameWithPathToCheck.FullName] = thisCheckSum;
                 }
             }

@@ -44,7 +44,7 @@ internal static class EditFileFormGeneric
 
             if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {
-                if (dirElemFileToModify.IsHydrated)
+                if (dirElemFileToModify.IsHydrated && !dirElemFileToModify.IsCloudOffline)
                 {
 
                     overallCount++;

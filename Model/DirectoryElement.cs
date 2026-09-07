@@ -208,6 +208,15 @@ public class DirectoryElement
     public ElementType Type { get; }
 
     /// <summary>
+    /// Whether this DE has the offline-only flag attached to it
+    /// </summary>
+    public bool IsCloudOffline
+    {
+        get => Type == ElementType.File && field;
+        set => field = (Type == ElementType.File) && value;
+    }
+
+    /// <summary>
     /// Full file name including its path.
     /// </summary>
     /// <remarks>May be an absolute or relative path. Use System.IO.Path and related APIs for manipulation and
@@ -258,7 +267,6 @@ public class DirectoryElement
 
             if (frmMainAppInstance.listViewDisplayMode == FrmMainApp.ListViewDisplayMode.LargeIcons)
             {
-
                 field = value;
             }
         }
@@ -1253,22 +1261,6 @@ public class DirectoryElement
     #endregion
 
     #region Other Methods
-    /// <summary>
-    /// Determines the ImageList key for the element based on its type and hydration status.
-    /// </summary>
-    /// <returns>A string key to be used in the ListView ImageList.</returns>
-    public string GetImageKey()
-    {
-        if (Type != ElementType.File)
-        {
-            // Use the Enum name (e.g., "SubDirectory", "Drive") as the key for system icons.
-            return Type.ToString();
-        }
-
-        // For files, only return the unique GUID if a thumbnail has actually been generated.
-        // This prevents files from "borrowing" the previous icon if they aren't ready.
-        return (Thumbnail != null) ? GetAttributeValueAsString(attribute: ElementAttribute.GUID) : string.Empty;
-    }
 
     /// <summary>
     /// Generates the thumbnail or assigns the system icon to the Thumbnail property.
@@ -1276,8 +1268,8 @@ public class DirectoryElement
     /// </summary>
     public void GenerateThumbnailIfRequired()
     {
-        // 1. Exit if thumbnails are disabled or already generated
-        if (!HelperVariables.UserSettingShowThumbnails || Thumbnail != null)
+        // 1. Exit if thumbnails are disabled or already generated or is cloud-offline
+        if (!HelperVariables.UserSettingShowThumbnails || Thumbnail != null || IsCloudOffline)
         {
             return;
         }
